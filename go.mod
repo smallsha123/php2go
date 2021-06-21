@@ -1,0 +1,1 @@
+module github.com/smallsha123/php2go
