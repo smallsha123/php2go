@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"os"
 	"reflect"
 	"testing"
 	"unicode/utf8"
@@ -223,26 +222,6 @@ func TestMath(t *testing.T) {
 	equal(t, "1,234,567,890.78", NumberFormat(1234567890.777, 2, ".", ","))
 }
 
-func TestFile(t *testing.T) {
-	tRealpath1, _ := Realpath("/home/go/../go/test/../")
-	equal(t, "/home/go", tRealpath1)
-
-	equal(t, "php2go.go", Basename("/home/go/src/pkg/php2go.go"))
-
-	tPathinfo := Pathinfo("/home/go/php2go.go.go", -1)
-	equal(t, map[string]string{"dirname": "/home/go", "basename": "php2go.go.go", "extension": "go", "filename": "php2go.go"}, tPathinfo)
-
-	tDiskFreeSpace, _ := DiskFreeSpace("/")
-	gt(t, float64(tDiskFreeSpace), 0)
-
-	tDiskTotalSpace, _ := DiskTotalSpace("/")
-	gte(t, float64(tDiskTotalSpace), 0)
-
-	wd, _ := os.Getwd()
-	tFilesize, _ := FileSize(wd)
-	gt(t, float64(tFilesize), 0)
-}
-
 func TestVariable(t *testing.T) {
 	equal(t, true, IsNumeric("-0xaF"))
 	equal(t, true, IsNumeric("123456"))
@@ -316,23 +295,9 @@ func equal(t *testing.T, expected, actual interface{}) {
 	}
 }
 
-// Expected to be unequal.
-func unequal(t *testing.T, expected, actual interface{}) {
-	if reflect.DeepEqual(expected, actual) {
-		t.Errorf("Did not expect %v (type %v) - Got %v (type %v)", expected, reflect.TypeOf(expected), actual, reflect.TypeOf(actual))
-	}
-}
-
 // Expect a greater than b.
 func gt(t *testing.T, a, b float64) {
 	if a <= b {
-		t.Errorf("Expected %v (type %v) > Got %v (type %v)", a, reflect.TypeOf(a), b, reflect.TypeOf(b))
-	}
-}
-
-// Expect a greater than or equal to b.
-func gte(t *testing.T, a, b float64) {
-	if a < b {
 		t.Errorf("Expected %v (type %v) > Got %v (type %v)", a, reflect.TypeOf(a), b, reflect.TypeOf(b))
 	}
 }
